@@ -175,12 +175,13 @@ def calculate(add_math_net_list, sub_math_net_list):
                         a_math_net.math_addr < b_math_net.math_addr + b_math_net.math_net_len:
                     del_math_net_list.append(a_math_net)
                     
-                    res_math_net = MathNet()
-                    res_math_net.math_addr_limit = a_math_net.math_addr_limit
-                    res_math_net.math_addr = b_math_net.math_addr + b_math_net.math_net_len
-                    res_math_net.math_net_len = (a_math_net.math_addr + a_math_net.math_net_len) - (b_math_net.math_addr + b_math_net.math_net_len)
-                    
-                    add_math_net_list.append(res_math_net)
+                    if b_math_net.math_addr + b_math_net.math_net_len < a_math_net.math_addr + a_math_net.math_net_len:
+                        res_math_net = MathNet()
+                        res_math_net.math_addr_limit = a_math_net.math_addr_limit
+                        res_math_net.math_addr = b_math_net.math_addr + b_math_net.math_net_len
+                        res_math_net.math_net_len = (a_math_net.math_addr + a_math_net.math_net_len) - (b_math_net.math_addr + b_math_net.math_net_len)
+                        
+                        add_math_net_list.append(res_math_net)
     
     return tuple(res_math_net_list)
 
