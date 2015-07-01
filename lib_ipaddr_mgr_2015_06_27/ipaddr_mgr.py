@@ -264,8 +264,16 @@ def split_optimize(math_net_list):
     
     return tuple(res_math_net_list)
 
+def sort_optimize(math_net_list):
+    math_net_list_assert(math_net_list)
+    
+    res_math_net_list = sorted(math_net_list, key=lambda math_net: math_net.math_addr)
+    
+    return tuple(res_math_net_list)
+
 def optimize(math_net_list):
     math_net_list = merge_optimize(math_net_list)
     math_net_list = split_optimize(math_net_list)
+    math_net_list = sort_optimize(math_net_list)
     
     return math_net_list
