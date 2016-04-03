@@ -8,7 +8,7 @@ addresses.
 Status
 ------
 
-Developer version (git master branch).
+Release ipaddr-mgr-0.2.1 .
 
 
 Using Example
