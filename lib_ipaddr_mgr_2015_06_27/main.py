@@ -1,6 +1,6 @@
 # -*- mode: python; coding: utf-8 -*-
 #
-# Copyright (c) 2015 Andrej Antonov <polymorphm@gmail.com>
+# Copyright (c) 2015, 2016 Andrej Antonov <polymorphm@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,11 @@ def main():
         description='calculator for add or subtract IPv6\IPv4 subnetwork addresses'
     )
     parser.add_argument(
+        '--use-old-style',
+        action='store_true',
+        help='print network mask instead of CIDR notation (for IPv4 only)'
+    )
+    parser.add_argument(
         'add_nets',
         metavar='ADDING-SUBNETWORKS',
         nargs='?',
@@ -61,6 +66,9 @@ def main():
     raw_res_math_net_list = ipaddr_mgr.calculate(add_math_net_list, sub_math_net_list)
     res_math_net_list = ipaddr_mgr.optimize(raw_res_math_net_list)
     
-    res_user_net_list = ipaddr_mgr.math_to_user_net_list(res_math_net_list)
+    res_user_net_list = ipaddr_mgr.math_to_user_net_list(
+        res_math_net_list,
+        use_old_style=args.use_old_style,
+    )
     
     print('\n'.join(res_user_net_list))

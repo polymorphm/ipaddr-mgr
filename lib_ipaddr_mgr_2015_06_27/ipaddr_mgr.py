@@ -1,6 +1,6 @@
 # -*- mode: python; coding: utf-8 -*-
 #
-# Copyright (c) 2015 Andrej Antonov <polymorphm@gmail.com>
+# Copyright (c) 2015, 2016 Andrej Antonov <polymorphm@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -80,7 +80,10 @@ def user_to_math_net(user_net):
     
     return math_net
 
-def math_to_user_net(math_net):
+def math_to_user_net(math_net, use_old_style=None):
+    if use_old_style is None:
+        use_old_style = False
+    
     math_net_assert(math_net)
     
     net_addr_n_list = []
@@ -114,7 +117,17 @@ def math_to_user_net(math_net):
                 math_net.math_net_len > 2 ** (len(net_addr_n) * 8 - net_bits):
             net_bits -= 1
         
-        user_net = '{}/{}'.format(net_addr, net_bits)
+        if use_old_style and len(net_addr_n) == 4:
+            net_mask = '{}.{}.{}.{}'.format(
+                    256 - 2 ** (max(0, min(8, 8 - net_bits))),
+                    256 - 2 ** (max(0, min(8, 16 - net_bits))),
+                    256 - 2 ** (max(0, min(8, 24 - net_bits))),
+                    256 - 2 ** (max(0, min(8, 32 - net_bits)))
+                    )
+            
+            user_net = '{} {}'.format(net_addr, net_mask)
+        else:
+            user_net = '{}/{}'.format(net_addr, net_bits)
     else:
         user_net = net_addr
     
@@ -123,8 +136,11 @@ def math_to_user_net(math_net):
 def user_to_math_net_list(user_net_list):
     return tuple(user_to_math_net(user_net) for user_net in user_net_list)
 
-def math_to_user_net_list(math_net_list):
-    return tuple(math_to_user_net(math_net) for math_net in math_net_list)
+def math_to_user_net_list(math_net_list, use_old_style=None):
+    return tuple(
+        math_to_user_net(math_net, use_old_style=use_old_style)
+        for math_net in math_net_list
+    )
 
 def calculate(add_math_net_list, sub_math_net_list):
     math_net_list_assert(add_math_net_list)
